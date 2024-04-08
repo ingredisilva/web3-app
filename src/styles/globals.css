@@ -1,0 +1,40 @@
+.fadeOut {
+  animation: fadeOut 0.5s forwards; /* Adjust duration as needed */
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    height: 0;
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+  }
+}
+/* styles.css */
+/* For Webkit (Chrome, Safari, Edge) */
+*::-webkit-scrollbar {
+  width: 5px;
+}
+
+*::-webkit-scrollbar-track {
+  background: '#0A7EA4';
+}
+
+*::-webkit-scrollbar-thumb {
+  background: '#d1d1d1';
+  border-radius: '6px';
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: '#0A7EA4';
+}
+
+/* For Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #f1f1f1;
+}

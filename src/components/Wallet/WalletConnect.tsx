@@ -11,22 +11,27 @@ interface WalletConnectProps {
 }
 
 const WalletConnect: React.FC<WalletConnectProps> = ({ onConnected }) => {
-  const [error, setError] = useState<string | null>(null);
-  const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
+  const { connectWallet, connected, id, error } = useWalletConnection(providerType);
+
 
   const connectWalletHandler = async () => {
-    if (window.ethereum && window.ethereum.isMetaMask) {
-      try {
-        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
-        const signer = provider.getSigner();
-        onConnected(accounts[0], signer);
-      } catch (err: any) {
-        setError(err.message);
-        setOpenSnackbar(true);
+    try {
+      if (!connected) {
+        const provider = new ethers.BrowserProvider(window.ethereum)
+        const signer = await provider.getSigner()
+        const address = await signer.getAddress();
+        const displayAddress = address?.substr(0, 6) + "...";
+        const message = "Hey you"
+        const sig = await signer.signMessage(message)
+        ethers.verifyMessage(message, sig)
+        setId(displayAddress)
+        setConnected(true)
+      } else {
+        window.ethereun.selectedAddress = null;
+        setConnected(false)
       }
-    } else {
-      setError('Please install MetaMask.');
+    } catch (error) {
+      console.error(error.message);
       setOpenSnackbar(true);
     }
   };
@@ -39,7 +44,8 @@ const WalletConnect: React.FC<WalletConnectProps> = ({ onConnected }) => {
     <Card>
       <Box sx={{ padding: '10px' }}>
         <Button variant="contained" color="primary" onClick={connectWalletHandler}>
-          Connect Wallet
+
+          {connected ? id : " Connect Wallet"}
         </Button>
         <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar}>
           <Alert onClose={handleCloseSnackbar} severity="error" sx={{ width: '100%' }}>

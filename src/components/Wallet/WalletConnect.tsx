@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+/* import React, { useState } from 'react';
 import Button from '@mui/material/Button';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
@@ -58,3 +58,45 @@ const WalletConnect: React.FC<WalletConnectProps> = ({ onConnected }) => {
 };
 
 export default WalletConnect;
+ */
+// src/components/WalletConnectButton.tsx
+import React, { useEffect, useState } from 'react';
+import Button from '@mui/material/Button';
+import { useWallet } from '@/hooks/useWallet';
+import getProvider from './web3ModalSetup';
+import { ethers } from 'ethers';
+
+const WalletConnectButton: React.FC = () => {
+  const [{ connected, address, error }, connectWallet] = useWallet();
+  const [web3Modal, setWeb3Modal] = useState<Web3Modal | undefined>();
+  const [provider, setProvider] = useState<ethers.Provider | null>(null);
+
+  useEffect(() => {
+    // This function is now safely called client-side
+    const loadProvider = async () => {
+      try {
+        const web3Provider = await getProvider();
+        setProvider(web3Provider);
+      } catch (error) {
+        console.error('Failed to load web3 provider:', error);
+      }
+    };
+
+    loadProvider();
+  }, []);
+  return (
+    <div>
+      {connected ? (
+        <p>Connected to {address}</p>
+      ) : (
+        <Button onClick={connectWallet} variant="contained">
+          Connect Wallet
+        </Button>
+      )}
+      {error && <p>Error: {error}</p>}
+    </div>
+  );
+};
+
+export default WalletConnectButton;
+

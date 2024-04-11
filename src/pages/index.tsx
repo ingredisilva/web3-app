@@ -1,6 +1,5 @@
 import ContractLoader from '@/components/Contracts/ContractLoader'
-import Loader from '@/components/Loader/Loader'
-import WalletConnect from '@/components/Wallet/WalletConnect'
+import WalletConnectButton from '@/components/Wallet/WalletConnect'
 import PageContainer from '@/components/container/PageContainer'
 
 import Language from '@/layouts/full/vertical/header/Language'
@@ -13,9 +12,7 @@ const Home = () => {
       <Box position='absolute' right={30} top={10} display='flex' alignItems='center' gap={2}>
         <Language />
         <ToggleMode />
-        <WalletConnect onConnected={function (account: string, signer: any): void {
-          throw new Error('Function not implemented.')
-        } } />
+        <WalletConnectButton />
       </Box>
       <Grid container spacing={0} justifyContent='center' sx={{ height: '100vh' }}>
         <Grid item xs={12} sm={12} lg={7} xl={5}>

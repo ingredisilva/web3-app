@@ -7,12 +7,7 @@ module.exports = {
   compiler: {
     styledComponents: true
   },
-  env: {
-    API_URL: process.env.API_URL,
-    ENCRYPTION_KEY: process.env.ENCRYPTION_KEY,
-    ALGORITHM: process.env.ALGORITHM,
-    HASH_SALT: process.env.HASH_SALT
-  },
+  env: {},
   typescript: {
     ignoreBuildErrors: true
   }

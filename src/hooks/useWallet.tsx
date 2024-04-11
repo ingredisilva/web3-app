@@ -1,38 +1,49 @@
-import { useState, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { ethers } from 'ethers';
+import { getProvider } from '@/web3modalSetup';
 
-// Hook for connecting to a wallet
-export const useWalletConnect = () => {
-  const [walletAddress, setWalletAddress] = useState(null);
-  const [isConnected, setConnected] = useState(false);
-  const [error, setError] = useState('');
+interface WalletState {
+  provider: ethers.Provider | null;
+  signer: ethers.Signer | null;
+  address: string | null;
+  connected: boolean;
+  error: string | null;
+}
 
-  const connectWalletHandler = useCallback(async (walletProvider: ethers.Eip1193Provider) => {
+export const useWallet = (): [WalletState, () => void] => {
+  const [state, setState] = useState<WalletState>({
+    provider: null,
+    signer: null,
+    address: null,
+    connected: false,
+    error: null,
+  });
+
+  const connectWallet = useCallback(async () => {
     try {
-      if (!isConnected) {
-        const provider = new ethers.BrowserProvider(walletProvider);
-        const signer = provider.getSigner();
-        const address = await (await signer).getAddress();
-        const displayAddress = `${address.substring(0, 6)}...`;
+      const provider = await getProvider(); // This is from our Web3Modal setup
+      const signer = provider.getSigner();
+      const address = await (await signer).getAddress();
 
-        // Optional: Sign a message for further verification
-        const message = 'Hey there, please sign this message to connect.';
-        const signature = await (await signer).signMessage(message);
-        ethers.utils.verifyMessage(message, signature);
-
-        setWalletAddress(displayAddress);
-        setConnected(true);
-      } else {
-        // To handle disconnecting
-        setWalletAddress(null);
-        setConnected(false);
-      }
-    } catch (err) {
-      setError(err.message);
-      console.error(err);
+      setState({
+        provider,
+        signer,
+        address,
+        connected: true,
+        error: null,
+      });
+    } catch (error) {
+      console.error("Error connecting to wallet:", error);
+      setState(s => ({ ...s, error: error instanceof Error ? error.message : String(error) }));
     }
-  }, [isConnected]);
+  }, []);
 
-  return { walletAddress, isConnected, error, connectWalletHandler };
+  // Automatically reconnect if the user has previously selected a provider
+  useEffect(() => {
+    if (window.localStorage.getItem("WEB3_CONNECT_CACHED_PROVIDER")) {
+      connectWallet();
+    }
+  }, [connectWallet]);
+
+  return [state, connectWallet];
 };
-

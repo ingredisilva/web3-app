@@ -1,4 +1,4 @@
-import ContractLoader from '@/components/Contracts/ContractLoader'
+import DynamicForm from '@/components/Contracts/DynamicForm'
 import WalletConnectButton from '@/components/Wallet/WalletConnect'
 import PageContainer from '@/components/container/PageContainer'
 
@@ -7,6 +7,7 @@ import ToggleMode from '@/layouts/full/vertical/header/ToggleMode'
 import { Box, Grid } from '@mui/material'
 
 const Home = () => {
+
   return (
     <PageContainer>
       <Box position='absolute' right={30} top={10} display='flex' alignItems='center' gap={2}>
@@ -50,9 +51,8 @@ const Home = () => {
             }
           }}
         >
-          <ContractLoader onContractLoaded={function (contractAddress: string, abi: any): void {
-            throw new Error('Function not implemented.')
-          }} />
+          <DynamicForm />
+
         </Grid>
       </Grid>
     </PageContainer>

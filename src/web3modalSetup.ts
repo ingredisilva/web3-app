@@ -3,21 +3,21 @@ import Web3Modal from 'web3modal'
 import WalletConnectProvider from '@walletconnect/web3-provider'
 import { ethers } from 'ethers'
 
-// Define providerOptions outside to avoid re-creation on each call
+// to avoid re-creation
 const providerOptions = {
   walletconnect: {
     package: WalletConnectProvider, // The WalletConnectProvider from the '@walletconnect/web3-provider' package
     options: {
-      infuraId: 'YOUR_INFURA_ID' // Replace with your actual Infura ID
+      infuraId: 'YOUR_INFURA_ID' 
     }
   }
-  // Additional providers can be added here
+  // Additional providers when necessary
 }
 
-// Function to get a new Web3Modal instance; ensures SSR compatibility
+// Function to get a new Web3Modal instance; -> ensures SSR compatibility
 const getWeb3Modal = () => {
   return new Web3Modal({
-    network: 'mainnet', // Change as per your requirement
+    network: 'mainnet', 
     cacheProvider: true,
     providerOptions
   })
@@ -27,6 +27,6 @@ const getWeb3Modal = () => {
 export const getProvider = async () => {
   const web3Modal = getWeb3Modal()
   const modalProvider = await web3Modal.connect()
-  const provider = new ethers.providers.Web3Provider(modalProvider)
+  const provider = new ethers.BrowserProvider(modalProvider)
   return provider
 }

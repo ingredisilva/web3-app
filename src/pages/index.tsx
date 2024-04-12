@@ -11,7 +11,6 @@ const Home = () => {
   return (
     <PageContainer>
       <Box position='absolute' right={30} top={10} display='flex' alignItems='center' gap={2}>
-        <Language />
         <ToggleMode />
         <WalletConnectButton />
       </Box>
@@ -45,6 +44,7 @@ const Home = () => {
           xl={7}
           display='flex'
           justifyContent='center'
+          flexDirection={'column'}
           sx={{
             alignItems: {
               lg: 'center'

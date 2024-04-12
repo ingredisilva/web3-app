@@ -17,6 +17,7 @@ import 'react-toastify/dist/ReactToastify.min.css'
 import '@/styles/globals.css'
 import { SnackbarProvider } from 'notistack'
 import { useEffect } from 'react'
+import { WalletProvider } from '@/contexts/WalletContext'
 
 const clientSideEmotionCache = createEmotionCache()
 interface MyAppProps extends AppProps {
@@ -43,12 +44,14 @@ const MyApp = (props: MyAppProps) => {
         <title>SparqDesk</title>
       </Head>
       <ThemeProvider theme={theme}>
-        <SnackbarProvider maxSnack={3}>
-          <RTL direction={customizer.activeDir}>
-            <CssBaseline />
-            <Component {...pageProps} />
-          </RTL>
-        </SnackbarProvider>
+        <WalletProvider>
+          <SnackbarProvider maxSnack={3}>
+            <RTL direction={customizer.activeDir}>
+              <CssBaseline />
+              <Component {...pageProps} />
+            </RTL>
+          </SnackbarProvider>
+        </WalletProvider>
       </ThemeProvider>
       <ToastContainer
         position='top-right'

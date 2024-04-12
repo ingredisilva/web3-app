@@ -1,24 +1,15 @@
+//@ts
 import React, { useState } from 'react';
 import Button from '@mui/material/Button';
-import { useWallet } from '@/hooks/useWallet';
-import { ethers } from 'ethers';
-import { getProvider } from '@/web3modalSetup';
+
 import { Box, Typography, useTheme } from '@mui/material';
+import { useWallet } from '@/contexts/WalletContext';
 
 const WalletConnectButton: React.FC = () => {
-  const [{ connected, address, error }, connectWallet] = useWallet();
-  const [provider, setProvider] = useState<ethers.Provider | null>(null);
+  const { state, connectWallet, disconnectWallet } = useWallet();
+  const { connected, address, error } = state;
 
   const theme = useTheme()
-  const handleConnectClick = async () => {
-    try {
-      const web3Provider = await getProvider();
-      setProvider(web3Provider);
-      connectWallet();
-    } catch (error) {
-      console.error('Failed to load web3 provider:', error);
-    }
-  };
 
   const shortenAddress = (address: string | null) => {
     if (!address) {
@@ -31,18 +22,20 @@ const WalletConnectButton: React.FC = () => {
   return (
     <Box sx={{ border: `1px solid ${theme.palette.grey['200']}`, padding: '10px' }}>
       {connected ? (
-
         <Box>
           Connected to
           <Typography variant='h6'> {shortenAddress(address)}</Typography>
+          <Button onClick={disconnectWallet} variant="contained" color="secondary">
+            Disconnect
+          </Button>
         </Box>
       ) : (
-        <Button onClick={handleConnectClick} variant="contained">
+        <Button onClick={connectWallet} variant="contained">
           Connect Wallet
         </Button>
       )}
-      {error && <Typography>Error: {error}</Typography>}
-    </Box>
+      {/*       {error && <Typography>Error: {error}</Typography>}
+ */}    </Box>
   );
 };
 

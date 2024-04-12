@@ -1,12 +1,14 @@
 import { ethers } from 'ethers'
 
-// Initialize a contract with ABI and address
-export const initContract = async (abi: any[], address: string, provider: ethers.providers.Web3Provider) => {
+export const initContract = async (abi: any[], address: string, provider: ethers.BrowserProvider) => {
   if (!provider) {
-    throw new Error('Provider is not initialized. Make sure your wallet is connected.')
+    console.error('Provider is not initialized. Make sure your wallet is connected.')
+    return
   }
-  const signer = await provider.getSigner()
-  return new ethers.Contract(address, abi, signer)
+  const signer = provider.getSigner() // getSigner does not need to be awaited
+  const contract = new ethers.Contract(address, abi, await signer)
+  console.log(contract)
+  return contract
 }
 
 // read/query function
@@ -17,7 +19,6 @@ export const executeReadFunction = async (contract: ethers.Contract, functionNam
     return result
   } catch (error) {
     console.error(`Error with ${functionName}:`, error)
-    throw error
   }
 }
 
@@ -30,6 +31,5 @@ export const executeWriteFunction = async (contract: ethers.Contract, functionNa
     return receipt
   } catch (error) {
     console.error(`Error with ${functionName}:`, error)
-    throw error 
-  }
+   }
 }

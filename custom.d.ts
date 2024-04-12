@@ -26,3 +26,8 @@ export default function getLibrary(
 ) {
   return new Web3Provider(provider);
 }
+
+export interface IProvider {
+  children: ReactNode
+}
+

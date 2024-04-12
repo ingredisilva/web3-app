@@ -1,54 +1,42 @@
+//@ts
 import React, { useState } from 'react';
 import Button from '@mui/material/Button';
-import Snackbar from '@mui/material/Snackbar';
-import Alert from '@mui/material/Alert';
-import { Box, Card } from '@mui/material';
 
-const ethers = require('ethers');
+import { Box, Typography, useTheme } from '@mui/material';
+import { useWallet } from '@/contexts/WalletContext';
 
-interface WalletConnectProps {
-  onConnected: (account: string, signer: any) => void;
-}
+const WalletConnectButton: React.FC = () => {
+  const { state, connectWallet, disconnectWallet } = useWallet();
+  const { connected, address, error } = state;
 
-const WalletConnect: React.FC<WalletConnectProps> = ({ onConnected }) => {
-  const [error, setError] = useState<string | null>(null);
-  const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
+  const theme = useTheme()
 
-  const connectWalletHandler = async () => {
-    if (window.ethereum && window.ethereum.isMetaMask) {
-      try {
-        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
-        const signer = provider.getSigner();
-        onConnected(accounts[0], signer);
-      } catch (err: any) {
-        setError(err.message);
-        setOpenSnackbar(true);
-      }
-    } else {
-      setError('Please install MetaMask.');
-      setOpenSnackbar(true);
+  const shortenAddress = (address: string | null) => {
+    if (!address) {
+      return "Endereço Indisponível";
     }
-  };
 
-  const handleCloseSnackbar = () => {
-    setOpenSnackbar(false);
+    return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
   };
 
   return (
-    <Card>
-      <Box sx={{ padding: '10px' }}>
-        <Button variant="contained" color="primary" onClick={connectWalletHandler}>
+    <Box sx={{ border: `1px solid ${theme.palette.grey['200']}`, padding: '10px' }}>
+      {connected ? (
+        <Box>
+          Connected to
+          <Typography variant='h6'> {shortenAddress(address)}</Typography>
+          <Button onClick={disconnectWallet} variant="contained" color="secondary">
+            Disconnect
+          </Button>
+        </Box>
+      ) : (
+        <Button onClick={connectWallet} variant="contained">
           Connect Wallet
         </Button>
-        <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar}>
-          <Alert onClose={handleCloseSnackbar} severity="error" sx={{ width: '100%' }}>
-            {error}
-          </Alert>
-        </Snackbar>
-      </Box>
-    </Card>
+      )}
+      {/*       {error && <Typography>Error: {error}</Typography>}
+ */}    </Box>
   );
 };
 
-export default WalletConnect;
+export default WalletConnectButton;

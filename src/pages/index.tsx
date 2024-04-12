@@ -52,7 +52,6 @@ const Home = () => {
           }}
         >
           <DynamicForm />
-
         </Grid>
       </Grid>
     </PageContainer>

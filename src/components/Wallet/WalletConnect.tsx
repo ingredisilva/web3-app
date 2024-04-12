@@ -19,7 +19,12 @@ const WalletConnectButton: React.FC = () => {
       console.error('Failed to load web3 provider:', error);
     }
   };
+
   const shortenAddress = (address: string | null) => {
+    if (!address) {
+      return "Endereço Indisponível";
+    }
+
     return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
   };
 

@@ -1,7 +1,10 @@
 import { ethers } from 'ethers'
 
 // Initialize a contract with ABI and address
-export const initContract = async (abi: any[], address: string, provider: ethers.BrowserProvider) => {
+export const initContract = async (abi: any[], address: string, provider: ethers.providers.Web3Provider) => {
+  if (!provider) {
+    throw new Error('Provider is not initialized. Make sure your wallet is connected.')
+  }
   const signer = await provider.getSigner()
   return new ethers.Contract(address, abi, signer)
 }

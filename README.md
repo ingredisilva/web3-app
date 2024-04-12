@@ -1,8 +1,8 @@
 # Project Documentation
 ## How to run
 
-NPM INSTALL
-NPM RUN DEV
+- NPM INSTALL
+- NPM RUN DEV
 
 ## Technologies
 

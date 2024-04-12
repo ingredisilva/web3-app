@@ -1,5 +1,8 @@
 # Project Documentation
 
+NPM INSTALL
+NPM RUN DEV
+
 ## Technologies
 
 - **Framework:** Next.js

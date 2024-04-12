@@ -1,4 +1,5 @@
 # Project Documentation
+## How to run
 
 NPM INSTALL
 NPM RUN DEV
